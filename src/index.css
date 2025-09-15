@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-open-sans: "Open Sans", sans-serif;
+}
+@layer components {
+    .input-border {
+        @apply border-2 border-slate-700 shadow-slate-700 shadow-[0px_2px] focus:shadow-none focus:translate-y-0.5 transition-all;
+    }
+    .button-border {
+        @apply border-2 border-slate-700 shadow-slate-700 shadow-[0px_2px] active:shadow-none active:translate-y-0.5 transition-all;
+    }
+}
