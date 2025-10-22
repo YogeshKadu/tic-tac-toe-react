@@ -11,4 +11,7 @@
     .button-border {
         @apply border-2 border-slate-700 shadow-slate-700 shadow-[0px_2px] active:shadow-none active:translate-y-0.5 transition-all;
     }
+    .gridbox-center {
+        @apply grid place-content-center
+    }
 }

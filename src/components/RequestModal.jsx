@@ -1,24 +1,52 @@
-import React from 'react';
+import React from "react";
+// import useProfileContext from "../context/user.context";
+import CloseIcon from "./icons/CloseIcon";
+import usePeerContext from "../context/peer.context";
 
 function RequestModal() {
+  // const { peerInstance, connectionRequest, cancelGame } = useProfileContext();
+  const { connectionRequest, isWaiting, connectionRequestID, AcceptRequest, RejectRequest } =
+    usePeerContext();
+
+  if (connectionRequest && !isWaiting)
     return (
-        <div className='w-ful h-svh bg-slate-950/80 absolute inset-0 flex items-center'>
-            <div className='max-w-sm w-full mx-auto p-3 md:p-5'>
-                <div className='bg-teal-300 p-5 input-border rounded-md w-full'>
-                    <h3 className='text-center mb-1 text-slate-800 font-bold text-lg'>New Game Request !</h3>
-                    <p></p>
-                    <div className='flex justify-between mt-8'>
-                        <button className='button-border cursor-pointer px-5 h-10 rounded-lg bg-red-500 text-white'>
-                            Cancel
-                        </button>
-                        <button className='button-border cursor-pointer px-5 h-10 rounded-lg bg-blue-500 text-white'>
-                            Ok
-                        </button>
-                    </div>
-                </div>
+      <div className="w-ful absolute inset-0 flex h-svh items-center bg-slate-950/80">
+        <div className="relative mx-auto w-full max-w-sm p-3 md:p-5">
+          <div className="input-border w-full rounded-md bg-teal-300 p-5">
+            <h3 className="mb-1 text-center text-lg font-bold text-slate-800">
+              New Game Request !
+            </h3>
+            <p className="text-center text-slate-700">
+              <span className="font-bold">"{connectionRequestID}"</span> Wants
+              to play a match
+            </p>
+            <div className="mt-8 flex flex-col gap-3 md:flex-row md:justify-between">
+              <button
+                className="button-border h-10 cursor-pointer rounded-lg bg-red-500 px-5 text-white"
+                onClick={() => RejectRequest()}
+              >
+                Cancel
+              </button>
+              <button
+                autoFocus={true}
+                className="button-border h-10 cursor-pointer rounded-lg bg-blue-500 px-5 text-white"
+                onClick={() => AcceptRequest()}
+              >
+                Ok
+              </button>
             </div>
+          </div>
+          <button
+            className="button-border gridbox-center absolute top-1 right-1 h-8 w-8 cursor-pointer rounded-lg bg-red-500 text-white"
+            onClick={() => RejectRequest()}
+          >
+            <CloseIcon className="h-6 w-6 text-slate-800" />
+          </button>
         </div>
-    )
+      </div>
+    );
+
+  return <></>;
 }
 
-export default RequestModal
+export default RequestModal;
