@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import SpinnerIcon from "../components/icons/SpinnerIcon";
 import usePeerContext from "../context/peer.context";
 import StarIcon from "../components/icons/StarIcon";
+import { textColors } from "../constants/colors";
 
-const textColors = ["text-cyan-100", "text-pink-200", "text-white"];
+// const textColors = ["text-cyan-100", "text-pink-200", "text-white"];
 
 function Login() {
   // const { login, loading } = useProfileContext();

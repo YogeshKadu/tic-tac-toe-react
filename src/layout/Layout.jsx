@@ -28,10 +28,10 @@ function Layout() {
               <>
                 {username && (
                   <button
-                    className="button-border grid aspect-square h-8 w-8 cursor-pointer place-content-center rounded-full bg-red-500"
+                    className="button-border grid aspect-square h-8 w-8 cursor-pointer place-content-center rounded-full bg-pink-300 text-amber-800"
                     onClick={() => HandleLogout()}
                   >
-                    <LogoutIcon className="h-6 w-6 text-white" />
+                    <LogoutIcon className="h-6 w-6" />
                   </button>
                 )}
               </>

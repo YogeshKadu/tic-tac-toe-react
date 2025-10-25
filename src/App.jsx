@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route index element={<Lobby />} />
-          <Route index element={<GameBoard />} />
+          <Route path="board" element={<GameBoard />} />
           <Route path='login' element={<Login />} />
         </Route>
       </Routes>

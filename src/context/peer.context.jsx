@@ -17,7 +17,7 @@ const tileObject = {
   disable: false,
 }
 
-const prefillTile = new Array(9).map((_,index) => ({...tileObject, id: index}))
+const prefillTile = new Array(9).fill(0).map((_,index) => ({...tileObject, id: index + 1}))
 
 const PeerContext = createContext();
 export const PeerProvider = ({ children }) => {
@@ -37,13 +37,13 @@ export const PeerProvider = ({ children }) => {
   const [isWaiting, setWaiting] = useState(false);
 
   const [disable, setDisable] = useState(true);
-  const [tile, setTile] = useState([...prefillTile]);
+  const [tiles, setTiles] = useState([...prefillTile]);
 
   //#endregion
   //#region PRIVATE
   useEffect(() => {
     if (isEmpty(username)) {
-      navigate("/login");
+      navigate("/board");
     } else {
       navigate("/");
     }
@@ -90,7 +90,7 @@ export const PeerProvider = ({ children }) => {
         setDisable(false);
         setWaiting(false);
         navigate("/board");
-        setTile([...prefillTile]);
+        setTiles([...prefillTile]);
         // TODO : User
       }
       break;
@@ -142,7 +142,7 @@ export const PeerProvider = ({ children }) => {
     connectionRequest.send(message);
     setConnection(connectionRequest);
     setConnectionRequest(null);
-    setTile([...prefillTile]);
+    setTiles([...prefillTile]);
     navigate("/board");
   }
   const RejectRequest = () => {
@@ -174,7 +174,7 @@ export const PeerProvider = ({ children }) => {
   return (
     <PeerContext.Provider
       value={{
-        tile,
+        tiles,
         loading,
         isWaiting,
         username,
