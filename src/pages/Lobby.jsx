@@ -58,55 +58,21 @@ function Lobby() {
           </div>
         </div>
         <div className="max-w-1/2 flex-auto">
-          <h3 className="relative rounded-full bg-indigo-900/70 px-6 py-3 text-center font-semibold text-white uppercase">
-            Lobby
+          <h3 className="relative text-xl rounded-full bg-indigo-900/70 px-6 py-3 text-center font-semibold text-white uppercase">
+            <span className="font-baloo">Hello</span> <span className="font-noto">👋</span>
           </h3>
           <div className="mt-8 flex flex-col gap-y-3">
-            {/* <div className="bg-indigo-900/80 rounded-lg p-2 px-2.5 flex items-center border-4 border-pink-400">
-              <span className={`w-10 ${textColors[textColors.length - 1]}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto size-5" width="1em" height="1em" viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16a8 8 0 0 0 0 16m3.536-4.464a.75.75 0 1 0-1.061-1.061a3.5 3.5 0 0 1-4.95 0a.75.75 0 0 0-1.06 1.06a5 5 0 0 0 7.07 0M9 8.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S7.448 7 8 7s1 .672 1 1.5m3 1.5c.552 0 1-.672 1-1.5S12.552 7 12 7s-1 .672-1 1.5s.448 1.5 1 1.5" clip-rule="evenodd"/></svg>
-              </span>
-              <p className={`flex-1 truncate ${textColors[textColors.length - 1]}`}>{username}</p>
-            </div> */}
-            {Array.from({ length: 5 }).map((_, idx) => (
-              <div className="bg-indigo-900/80 rounded-lg p-2 px-2.5 flex items-center" key={`players_${idx}`}>
-                <span className={`w-10 ${textColors[idx % textColors.length]}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto size-5" width="1em" height="1em" viewBox="0 0 20 20"><path fill="currentColor" fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16a8 8 0 0 0 0 16m3.536-4.464a.75.75 0 1 0-1.061-1.061a3.5 3.5 0 0 1-4.95 0a.75.75 0 0 0-1.06 1.06a5 5 0 0 0 7.07 0M9 8.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S7.448 7 8 7s1 .672 1 1.5m3 1.5c.552 0 1-.672 1-1.5S12.552 7 12 7s-1 .672-1 1.5s.448 1.5 1 1.5" clipRule="evenodd" /></svg>
-                </span>
-                <p className={`flex-1 truncate ${textColors[idx % textColors.length]}`}>{`Player ${idx + 1}`}</p>
-                <button className="bg-indigo-900 text-white text-sm px-3 py-0.5 rounded-md cursor-pointer">send</button>
+            <div className="w-full rounded-xl border-b-8 border-b-indigo-950 bg-indigo-900 relative
+            before:containt-[''] before:absolute before:block before:h-14 before:w-3 before:bg-indigo-400 before:rounded-lg before:left-8 before:-top-10 before:shadow-[0px_0.3rem] before:shadow-blue-950/90
+            after:containt-[''] after:absolute after:block after:h-14 after:w-3 after:bg-indigo-400 after:rounded-lg after:right-8 after:-top-10 after:shadow-[0px_0.3rem] after:shadow-blue-950/90
+          ">
+              <div className="text-center flex justify-center gap-2 items-center py-3 text-3xl">
+                <span className="font-medium text-white">{username}</span>
               </div>
-            ))}
+            </div>
+
           </div>
         </div>
-      </div>
-      <div className="mx-auto hidden w-full max-w-sm p-3 md:p-5">
-        <form
-          onSubmit={HandleSubmit}
-          className="input-border rounded-md bg-teal-300 p-5"
-        >
-          <h3 className="mb-1 text-center text-lg font-bold text-slate-800">
-            Lobby
-          </h3>
-          <p className="mb-5 text-center text-neutral-700">
-            Wait for other or request for a match
-          </p>
-          <input
-            type="text"
-            value={name}
-            autoFocus={true}
-            onChange={HandleChange}
-            className="input-border h-12 w-full rounded-lg bg-white px-5 text-center outline-none"
-            placeholder="Username..."
-          />
-          <button
-            disabled={!name}
-            className="button-border mt-5 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-indigo-700 font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-400"
-          >
-            Request
-            {loading && <SpinnerIcon className="h-6 w-6 animate-spin" />}
-          </button>
-        </form>
       </div>
     </>
   );

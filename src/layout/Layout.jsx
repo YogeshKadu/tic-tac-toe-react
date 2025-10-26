@@ -15,7 +15,7 @@ function Layout() {
 
   return (
     <>
-      <div className="font-baloo min-h-svh bg-indigo-300">
+      <div className="font-baloo min-h-[calc(100svh_-_2rem)] bg-indigo-300">
         <header className="relative mx-auto w-full max-w-3xl py-3 px-6 md:py-6">
           <h1 className="text-3xl font-black text-white md:text-5xl">
             TIC TAC <span className="text-indigo-100">TOE.</span>
