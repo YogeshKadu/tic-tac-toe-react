@@ -5,13 +5,7 @@ import { turnColors } from "../constants/colors";
 function GameBoard() {
   const { gameObject, username, Selection } = usePeerContext();
   const isMyTurn = gameObject[gameObject.turn] == username;
-  const [sample, setSample] = useState({ name: "Yogesh", });
-  const [sample1, setSample1] = useState(null);
-  const HandleSubmit = () => {
-    setSample1(sample);
-    setSample(null);
-  };
-  console.log("sample - ", sample, " sample1 - ", sample1);
+  const myLabel = gameObject.x == username ? 'x' : 'o';
 
 
   return (
@@ -41,8 +35,13 @@ function GameBoard() {
                   gameObject?.tiles.map((item) => (
                     <button onClick={() => Selection(item.id)}
                       disabled={!isMyTurn || item.disabled}
-                      className="bg-indigo-400/40 aspect-square rounded-lg shadow-blue-950/65 shadow-[0px_0.4rem] group cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-600">
-                      <span className="font-semibold text-6xl text-indigo-300/30 group-hover:text-indigo-300 transition-colors">{item.id}</span>
+                      className="bg-indigo-400/40 aspect-square rounded-lg shadow-blue-950 shadow-[0px_0.5rem] group cursor-pointer disabled:cursor-not-allowed disabled:bg-blue-950 transition-colors">
+                      {
+                        item.selected ?
+                          <span className={`font-black text-6xl ${turnColors[item.label]}`}>{item.label}</span>
+                          :
+                          <span className="font-semibold text-6xl text-indigo-300/30 group-hover:text-indigo-300 transition-colors">{item.id}</span>
+                      }
                     </button>
                   ))
                 }
@@ -52,7 +51,7 @@ function GameBoard() {
           <div className="w-full rounded-xl border-b-8 border-b-indigo-950 bg-indigo-900 relative mt-5
             before:containt-[''] before:absolute before:block before:h-14 before:w-3 before:bg-indigo-400 before:rounded-lg before:left-8 before:-top-10 before:shadow-[0px_0.3rem] before:shadow-blue-950/90
             after:containt-[''] after:absolute after:block after:h-14 after:w-3 after:bg-indigo-400 after:rounded-lg after:right-8 after:-top-10 after:shadow-[0px_0.3rem] after:shadow-blue-950/90
-          " onClick={() => HandleSubmit()}>
+          ">
             <div className="text-center flex justify-center gap-2 items-center py-3 text-3xl">
               <span className={`font-bold uppercase ${turnColors[gameObject.turn || 'x']}`}>{gameObject.turn}</span>
               <span className="font-medium text-white">TURN</span>

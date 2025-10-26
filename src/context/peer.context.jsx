@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
 import Peer from "peerjs";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
@@ -15,6 +15,7 @@ const tileObject = {
   peerId: null, // peerID
   label: null,  // X | O
   disabled: false,
+  selected: false,
 }
 
 const prefillTile = new Array(9).fill(0).map((_, index) => ({ ...tileObject, id: index + 1 }))
@@ -42,6 +43,7 @@ export const PeerProvider = ({ children }) => {
   const [connectionID, setConnectionID] = useState("");
   const [connectionRequest, setConnectionRequest] = useState(null);
   const [connectionRequestID, setConnectionRequestID] = useState(null);
+  const connectionRequestRef = useRef(null);
 
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -70,8 +72,11 @@ export const PeerProvider = ({ children }) => {
         if (connection) {
           // TODO: Reject New connection
         }
+        console.log("HandleConnection - ", _connection);
+
         setConnectionRequestID(_connection.peer);
         setConnectionRequest(_connection);
+        connectionRequestRef.current = _connection;
       })
       .on("error", (error) => {
         throw new Error(error);
@@ -82,7 +87,10 @@ export const PeerProvider = ({ children }) => {
           setConnection(null)
         } else if (connectionRequest && _connection.peer == connectionRequest.peer) {
           setConnectionRequest(null);
+          connectionRequestRef.current = null;
+
         } else {
+          connectionRequestRef.current = null;
           setConnectionRequest(null)
           setConnection(null)
         }
@@ -96,8 +104,8 @@ export const PeerProvider = ({ children }) => {
 
     switch (message?.messageType) {
       case messageType.ACCEPTED: {
-        console.log("Request Accepted - ", connectionRequest);
-        setConnection(connectionRequest)
+        console.log("Request Accepted - ", connectionRequestRef);
+        setConnection(connectionRequestRef.current)
         setConnectionRequest(null)
         setWaiting(false);
         navigate("/board");
@@ -124,7 +132,11 @@ export const PeerProvider = ({ children }) => {
   //#region PUBLIC
   const login = async (username) => {
     setLoading(true);
-    const peer = new Peer(username);
+    const peer = new Peer(username, {
+      host: "localhost",
+      port: 9001,
+      path: "/"
+    });
     peer
       .on("open", (id) => {
         setUsername(id);
@@ -142,6 +154,8 @@ export const PeerProvider = ({ children }) => {
         toast.success("Peer connection disconnected!");
         setConnection(null);  //TODO: close corrct connection.
         setUsername("");
+        setConnectionRequest(null);
+        connectionRequestRef.current = null;
       })
       .on("error", (error) => {
         HandleError(error, "Facing error on peer connection !");
@@ -166,7 +180,7 @@ export const PeerProvider = ({ children }) => {
 
     connectionRequest?.send(message);
     setGameObject(message);
-    setConnection(connectionRequest)
+    setConnection(connectionRequestRef.current);
     setConnectionRequest(null)
     navigate("/board");
   }
@@ -184,7 +198,8 @@ export const PeerProvider = ({ children }) => {
       label: myLabel,
       peerId: username,
       disabled: false,
-      id: tileID
+      id: tileID,
+      selected: true
     }
     const updatedTiles = gameObject.tiles.map((item) => item.id == tileID ? ({ ...item, ...choice }) : item);
     const message = {
