@@ -43,7 +43,7 @@ export const PeerProvider = ({ children }) => {
   //#region PRIVATE
   useEffect(() => {
     if (isEmpty(username)) {
-      navigate("/board");
+      navigate("/login");
     } else {
       navigate("/");
     }
