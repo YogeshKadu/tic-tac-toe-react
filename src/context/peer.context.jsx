@@ -132,11 +132,7 @@ export const PeerProvider = ({ children }) => {
   //#region PUBLIC
   const login = async (username) => {
     setLoading(true);
-    const peer = new Peer(username, {
-      host: "localhost",
-      port: 9001,
-      path: "/"
-    });
+    const peer = new Peer(username);
     peer
       .on("open", (id) => {
         setUsername(id);
