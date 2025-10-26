@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Outlet } from "react-router";
 import LogoutIcon from "../components/icons/LogoutIcon";
 import usePeerContext from "../context/peer.context";
-import CloseIcon from "../components/icons/CloseIcon";
 import DownArrowIcon from "../components/icons/DownArrowIcon";
 
 function Layout() {
@@ -16,7 +15,7 @@ function Layout() {
 
   return (
     <>
-      <div className="font-open-sans min-h-svh bg-indigo-300">
+      <div className="font-baloo min-h-svh bg-indigo-300">
         <header className="relative mx-auto w-full max-w-3xl py-3 px-6 md:py-6">
           <h1 className="text-3xl font-black text-white md:text-5xl">
             TIC TAC <span className="text-indigo-100">TOE.</span>
@@ -41,29 +40,6 @@ function Layout() {
               onClick={HandleToggle}
             >
               <DownArrowIcon className={`transition-all rotate-0 duration-200 ease-out delay-300 ${open && '!rotate-180'}`} />
-              {/* {open ? (
-                <>
-                <CloseIcon />
-                </>
-              ) : (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 6h10M4 12h16M7 12h13M7 18h10"
-                    ></path>
-                  </svg>
-                </>
-              )} */}
             </button>
           </div>
         </header>

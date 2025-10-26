@@ -1,57 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import usePeerContext from "../context/peer.context";
+import { turnColors } from "../constants/colors";
 
 function GameBoard() {
-  const { tiles, loading } = usePeerContext();
-  const HandleSubmit = (event) => {
-    event.preventDefault();
+  const { gameObject, username, Selection } = usePeerContext();
+  const isMyTurn = gameObject[gameObject.turn] == username;
+  const [sample, setSample] = useState({ name: "Yogesh", });
+  const [sample1, setSample1] = useState(null);
+  const HandleSubmit = () => {
+    setSample1(sample);
+    setSample(null);
   };
-  console.log(tiles);
+  console.log("sample - ", sample, " sample1 - ", sample1);
+
 
   return (
     <>
-      {" "}
       <div className="flex flex-col items-center gap-10 py-3 md:flex-row md:py-6">
         <div className="w-full flex-auto md:max-w-1/2">
-          <div className="h-16 w-full rounded-xl border-b-8 border-b-indigo-950 bg-indigo-900">
-            <div className="flex h-full items-center justify-center gap-2 text-xl font-semibold">
-              <span className="text-cyan-300">SPARTAN</span>
-              <span className="text-white">VS</span>
-              <span className="text-pink-300">GOHAN</span>
+          <div className="w-full rounded-xl border-b-8 border-b-indigo-950 bg-indigo-900 relative
+            before:containt-[''] before:absolute before:block before:h-14 before:w-3 before:bg-indigo-400 before:rounded-lg before:left-8 before:-bottom-11 before:shadow-[0px_0.3rem] before:shadow-blue-950/90
+            after:containt-[''] after:absolute after:block after:h-14 after:w-3 after:bg-indigo-400 after:rounded-lg after:right-8 after:-bottom-11 after:shadow-[0px_0.3rem] after:shadow-blue-950/90
+          ">
+            <div className="flex justify-evenly items-center py-5 uppercase">
+              <div className="text-cyan-300 text-center">
+                <p>{gameObject.x}</p>
+                <span className="font-bold text-6xl">X</span>
+              </div>
+              <span className="text-white text-3xl font-semibold">VS</span>
+              <div className="text-pink-300 text-center">
+                <p>{gameObject.o}</p>
+                <span className="font-bold text-6xl">O</span>
+              </div>
             </div>
           </div>
           <div className="mt-5">
-            <div className="rounded-xl bg-indigo-900 px-4 py-8 font-baloo">
+            <div className="rounded-xl bg-indigo-900 px-6 py-8 font-baloo">
               <div className="grid grid-cols-3 gap-5">
                 {
-                  tiles.map((item) => (
-                    <button className="bg-indigo-400/40 aspect-square rounded-lg shadow-blue-950/65 shadow-[0px_0.4rem]">
-                      <span className="font-semibold text-6xl">{item.id}</span>
+                  gameObject?.tiles.map((item) => (
+                    <button onClick={() => Selection(item.id)}
+                      disabled={!isMyTurn || item.disabled}
+                      className="bg-indigo-400/40 aspect-square rounded-lg shadow-blue-950/65 shadow-[0px_0.4rem] group cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-600">
+                      <span className="font-semibold text-6xl text-indigo-300/30 group-hover:text-indigo-300 transition-colors">{item.id}</span>
                     </button>
                   ))
                 }
               </div>
             </div>
           </div>
+          <div className="w-full rounded-xl border-b-8 border-b-indigo-950 bg-indigo-900 relative mt-5
+            before:containt-[''] before:absolute before:block before:h-14 before:w-3 before:bg-indigo-400 before:rounded-lg before:left-8 before:-top-10 before:shadow-[0px_0.3rem] before:shadow-blue-950/90
+            after:containt-[''] after:absolute after:block after:h-14 after:w-3 after:bg-indigo-400 after:rounded-lg after:right-8 after:-top-10 after:shadow-[0px_0.3rem] after:shadow-blue-950/90
+          " onClick={() => HandleSubmit()}>
+            <div className="text-center flex justify-center gap-2 items-center py-3 text-3xl">
+              <span className={`font-bold uppercase ${turnColors[gameObject.turn || 'x']}`}>{gameObject.turn}</span>
+              <span className="font-medium text-white">TURN</span>
+            </div>
+          </div>
         </div>
         <div className="w-full flex-auto md:max-w-1/2"></div>
-      </div>
-      <div className="mx-auto w-full max-w-xs p-3 md:max-w-sm md:p-5">
-        <form
-          onSubmit={HandleSubmit}
-          className="input-border grid w-full grid-cols-3 gap-5 rounded-2xl bg-indigo-950 p-5 md:p-8"
-        >
-          {tiles.map((item) => (
-            <button
-              className="gridbox-center aspect-square rounded-xl bg-indigo-900"
-              key={item.id}
-            >
-              <span className="text-3xl font-semibold text-indigo-300/10">
-                {item.id}
-              </span>
-            </button>
-          ))}
-        </form>
       </div>
     </>
   );

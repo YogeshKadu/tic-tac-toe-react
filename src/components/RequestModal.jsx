@@ -1,10 +1,8 @@
 import React from "react";
-// import useProfileContext from "../context/user.context";
 import CloseIcon from "./icons/CloseIcon";
 import usePeerContext from "../context/peer.context";
 
 function RequestModal() {
-  // const { peerInstance, connectionRequest, cancelGame } = useProfileContext();
   const { connectionRequest, isWaiting, connectionRequestID, AcceptRequest, RejectRequest } =
     usePeerContext();
 

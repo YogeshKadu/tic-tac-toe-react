@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import useProfileContext from '../context/user.context';
 import SpinnerIcon from "../components/icons/SpinnerIcon";
 import usePeerContext from "../context/peer.context";
 import StarIcon from "../components/icons/StarIcon";

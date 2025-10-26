@@ -1,10 +1,8 @@
 import React from 'react';
-// import useProfileContext from '../context/user.context';
 import LogoutIcon from './icons/LogoutIcon';
 import usePeerContext from '../context/peer.context';
 
 function Header() {
-    // const { username, logout } = useProfileContext();
     const { username, logout } = usePeerContext();
     const HandleLogout = () => {
         logout();

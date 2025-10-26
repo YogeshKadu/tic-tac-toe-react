@@ -12,17 +12,29 @@ const messageType = {
 }
 const tileObject = {
   id: null,
-  from: null, // peerID
+  peerId: null, // peerID
   label: null,  // X | O
-  disable: false,
+  disabled: false,
 }
 
-const prefillTile = new Array(9).fill(0).map((_,index) => ({...tileObject, id: index + 1}))
+const prefillTile = new Array(9).fill(0).map((_, index) => ({ ...tileObject, id: index + 1 }))
+
+const defaultGameObject = {
+  x: '',          //peerid
+  o: '',          //peerid
+  tiles: [...prefillTile],
+  isGameOver: false,
+  winnerID: null,
+  turn: 'x',
+  choiceObject: null, //{choice:'X|O',peerID, tileId},
+  messageType: null
+}
+
+const invertTurns = { 'x': 'o', 'o': 'x' };
 
 const PeerContext = createContext();
 export const PeerProvider = ({ children }) => {
   //#region variables
-
   const navigate = useNavigate();
 
   const [peer, setPeer] = useState(null);
@@ -33,11 +45,10 @@ export const PeerProvider = ({ children }) => {
 
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isWaiting, setWaiting] = useState(false);
 
-  const [disable, setDisable] = useState(true);
   const [tiles, setTiles] = useState([...prefillTile]);
+  const [gameObject, setGameObject] = useState({ ...defaultGameObject });
 
   //#endregion
   //#region PRIVATE
@@ -55,50 +66,57 @@ export const PeerProvider = ({ children }) => {
   const HandleConnection = (_connection) => {
     _connection
       .on("open", () => {
-        if(connection) {
+        console.log("Connection open");
+        if (connection) {
           // TODO: Reject New connection
-        }        
-        setConnectionRequestID(_connection.peer);
-        // setConnectionRequest(_connection);
-        if(isWaiting){
-          toast.success("Request Sent")
-        }else{
-          // toast.success("New Game request")
         }
+        setConnectionRequestID(_connection.peer);
+        setConnectionRequest(_connection);
       })
       .on("error", (error) => {
         throw new Error(error);
       })
       .on("close", () => {
         toast.success("Connection closed");
-        if(connection && _connection.peer == connection.peer){
-          setConnection(null);
-        } else if(connectionRequest && _connection.peer == connectionRequest.peer) {
+        if (connection && _connection.peer == connection.peer) {
+          setConnection(null)
+        } else if (connectionRequest && _connection.peer == connectionRequest.peer) {
           setConnectionRequest(null);
+        } else {
+          setConnectionRequest(null)
+          setConnection(null)
         }
       })
       .on("data", HandleMessage);
-      setConnectionRequest(_connection);
+    // setConnectionRequest(_connection);
   };
-  const HandleMessage = (data) => {
-    console.log("HandleMessage", data);
-    
-    switch(data?.messageType) {
+
+  const HandleMessage = (message) => {
+    console.log("HandleMessage", message);
+
+    switch (message?.messageType) {
       case messageType.ACCEPTED: {
-        setConnection(connectionRequest);
-        setConnectionRequest(null);
-        setDisable(false);
+        console.log("Request Accepted - ", connectionRequest);
+        setConnection(connectionRequest)
+        setConnectionRequest(null)
         setWaiting(false);
         navigate("/board");
-        setTiles([...prefillTile]);
+        setGameObject(message);
         // TODO : User
       }
-      break;
+        break;
 
       case messageType.REJECTED: {
         connectionRequest?.close();
+        setConnectionRequest(null)
+        setWaiting(false);
       }
-      break;
+        break;
+
+      case messageType.CHOICE: {
+        setGameObject(message);
+      }
+        break;
     }
   };
   //#endregion
@@ -115,14 +133,14 @@ export const PeerProvider = ({ children }) => {
       })
       .on("close", () => {
         toast.success("Peer connection closed!");
-        setConnection(null);
+        setConnection(null);  //TODO: close corrct connection.
         setUsername("");
       })
       .on("connection", HandleConnection)
       .on("disconnected", (_) => {
         console.log("Peer Disconnected");
         toast.success("Peer connection disconnected!");
-        setConnection(null);
+        setConnection(null);  //TODO: close corrct connection.
         setUsername("");
       })
       .on("error", (error) => {
@@ -135,46 +153,72 @@ export const PeerProvider = ({ children }) => {
     await peer.disconnect();
   };
 
-  const AcceptRequest = () => { 
+  const AcceptRequest = () => {
+    // const imX = Math.random() < 0.5;
+    const imX = true;
     const message = {
+      ...gameObject,
       messageType: messageType.ACCEPTED,
+      x: imX ? username : connectionRequest?.peer,
+      o: imX ? connectionRequest?.peer : username,
     }
-    connectionRequest.send(message);
-    setConnection(connectionRequest);
-    setConnectionRequest(null);
-    setTiles([...prefillTile]);
+    console.log("AcceptRequest - ", connectionRequest);
+
+    connectionRequest?.send(message);
+    setGameObject(message);
+    setConnection(connectionRequest)
+    setConnectionRequest(null)
     navigate("/board");
   }
   const RejectRequest = () => {
     const message = {
       messageType: messageType.REJECTED,
     };
-    connectionRequest.send(message);
-    setConnectionRequest(null);
+    console.log(connectionRequest);
+    connectionRequest?.send(message);
+    setConnectionRequest(null)
+  }
+  const Selection = (tileID) => {
+    const myLabel = gameObject.x == username ? 'x' : 'o';
+    const choice = {
+      label: myLabel,
+      peerId: username,
+      disabled: false,
+      id: tileID
+    }
+    const updatedTiles = gameObject.tiles.map((item) => item.id == tileID ? ({ ...item, ...choice }) : item);
+    const message = {
+      ...gameObject,
+      tiles: updatedTiles,
+      turn: invertTurns[myLabel],
+      choiceObject: choice,
+      messageType: messageType.CHOICE
+    }
+    console.log(connection);
+    setGameObject(message);
+    connection.send(message);
   }
 
-  const connectPeer = (peerId) => {
+  const connectPeer = async (peerId) => {
     if (!peer) {
       toast.error("Please login");
       return;
     }
     try {
       setWaiting(true);
-      const _connection = peer.connect(peerId);
+      const _connection = await peer.connect(peerId);
       HandleConnection(_connection);
     } catch (error) {
       toast.error(error.message);
     }
   };
 
-  const SendMessage = (_connection) => {};
-
   //#endregion
 
   return (
     <PeerContext.Provider
       value={{
-        tiles,
+        tiles, gameObject,
         loading,
         isWaiting,
         username,
@@ -187,7 +231,7 @@ export const PeerProvider = ({ children }) => {
         connectPeer,
         AcceptRequest,
         RejectRequest,
-        SendMessage
+        Selection
       }}
     >
       {children}
