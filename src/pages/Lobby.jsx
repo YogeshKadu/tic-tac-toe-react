@@ -22,7 +22,7 @@ function Lobby() {
     <>
       {/* TODO: REMOVE UNWANTED CODE */}
       <div className="flex flex-col items-center gap-10 py-3 md:flex-row md:py-6">
-        <div className="max-w-1/2 flex-auto">
+        <div className="w-full md:max-w-1/2 flex-auto">
           <h3 className="relative rounded-xl bg-indigo-900 px-6 py-3 text-center font-semibold text-white uppercase">
             Request
             <svg
@@ -57,7 +57,7 @@ function Lobby() {
             </form>
           </div>
         </div>
-        <div className="max-w-1/2 flex-auto">
+        <div className="w-full md:max-w-1/2 flex-auto">
           <h3 className="relative text-xl rounded-full bg-indigo-900/70 px-6 py-3 text-center font-semibold text-white uppercase">
             <span className="font-baloo">Hello</span> <span className="font-noto">👋</span>
           </h3>
