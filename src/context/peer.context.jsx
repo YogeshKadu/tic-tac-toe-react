@@ -97,6 +97,8 @@ export const PeerProvider = ({ children }) => {
           setConnectionRequest(null)
           setConnection(null)
         }
+        navigate("/");
+        ResetGame();
       })
       .on("data", HandleMessage);
     // setConnectionRequest(_connection);
@@ -136,7 +138,11 @@ export const PeerProvider = ({ children }) => {
   //#region PUBLIC
   const login = async (username) => {
     setLoading(true);
-    const peer = new Peer(username);
+    const peer = new Peer(username, {
+      host: "localhost",
+      port: 9001,
+      path: "/"
+    });
     peer
       .on("open", (id) => {
         setUsername(id);
@@ -246,6 +252,11 @@ export const PeerProvider = ({ children }) => {
       toast.error(error.message);
     }
   };
+  const CloseConnection = () => {
+    connectionRequestRef.current?.close();
+    connectionRequestRef.current = null;
+    setConnection(null);
+  }
 
   const checkWinCondition = (tiles) => {
     const winningCombination = [
@@ -290,7 +301,8 @@ export const PeerProvider = ({ children }) => {
         AcceptRequest,
         RejectRequest,
         Selection,
-        ResetGame
+        ResetGame,
+        CloseConnection
       }}
     >
       {children}

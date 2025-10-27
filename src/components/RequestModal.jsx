@@ -20,14 +20,14 @@ function RequestModal() {
             </p>
             <div className="mt-8 flex flex-col gap-3 md:flex-row md:justify-between">
               <button
-                className="button-border h-10 cursor-pointer rounded-lg flex-1 bg-pink-300 px-5 text-amber-800 font-semibold"
+                className="button-border py-2 cursor-pointer rounded-lg flex-1 bg-pink-300 px-5 text-amber-800 font-semibold"
                 onClick={() => RejectRequest()}
               >
                 Cancel
               </button>
               <button
                 autoFocus={true}
-                className="button-border h-10 cursor-pointer rounded-lg flex-1 bg-sky-300 px-5 text-cyan-900 font-semibold"
+                className="button-border py-2 cursor-pointer rounded-lg flex-1 bg-sky-300 px-5 text-cyan-900 font-semibold"
                 onClick={() => AcceptRequest()}
               >
                 Ok
